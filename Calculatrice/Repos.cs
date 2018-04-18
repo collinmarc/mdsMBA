@@ -22,18 +22,50 @@ namespace Calculatrice
             String[] tabFiles = Directory.GetFiles(pPath);
             foreach (string filename in tabFiles)
             {
-                FileInfo oFileInfo = new FileInfo(pPath + "/" + filename);
-               switch (oFileInfo.Extension)
+                FileInfo oFileInfo = new FileInfo(filename);
+               switch (oFileInfo.Extension.ToUpper())
                 {
-                    case ".txt":
+                    case ".TXT":
                         if (File.Exists(pPath+"/TXT/"+oFileInfo.Name))
                         {
                             File.Delete(pPath + "/TXT/" + oFileInfo.Name);
                         }
                         File.Move(filename,pPath+"/TXT/"+ oFileInfo.Name);
                         break;
+                    case ".JPG":
+                    case ".PNG":
+                        if (File.Exists(pPath + "/IMG/" + oFileInfo.Name))
+                        {
+                            File.Delete(pPath + "/IMG/" + oFileInfo.Name);
+                        }
+                        File.Move(filename, pPath + "/IMG/" + oFileInfo.Name);
+                        break;
+                    case ".EXE":
+                        if (File.Exists(pPath + "/BIN/" + oFileInfo.Name))
+                        {
+                            File.Delete(pPath + "/BIN/" + oFileInfo.Name);
+                        }
+                        File.Move(filename, pPath + "/BIN/" + oFileInfo.Name);
+                        break;
+                    case ".PDF":
+                        if (File.Exists(pPath + "/DOCS/" + oFileInfo.Name))
+                        {
+                            File.Delete(pPath + "/DOCS/" + oFileInfo.Name);
+                        }
+                        File.Move(filename, pPath + "/DOCS/" + oFileInfo.Name);
+                        break;
                 }
             }
+            String[] tabDir = Directory.GetDirectories(pPath);
+            foreach (string Dirname in tabDir)
+            {
+                DirectoryInfo oDirInfo = new DirectoryInfo(Dirname);
+                if (!oDirInfo.Name.Equals("TXT") && !oDirInfo.Name.Equals("IMG") && !oDirInfo.Name.Equals("EXE") && !oDirInfo.Name.Equals("DOCS"))
+                {
+                    Organize(oDirInfo.FullName);
+                }
+            }
+
 
         }
     }

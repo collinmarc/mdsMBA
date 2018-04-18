@@ -8,6 +8,16 @@ namespace CaculatriceTest
     [TestClass]
     public class ReposTest
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            if (System.IO.Directory.Exists("REP1"))
+            {
+                System.IO.Directory.Delete("REP1", true);
+            }
+            System.IO.Directory.CreateDirectory("REP1");
+        }
+
         [TestMethod]
         [ExpectedException (typeof(System.IO.DirectoryNotFoundException))]
         public void TestRepertoireInexistant()
@@ -66,14 +76,6 @@ namespace CaculatriceTest
             Assert.IsTrue(System.IO.Directory.Exists("REP1/TXT"));
             Assert.IsTrue(System.IO.File.Exists("REP1/TXT/adel.txt"));
         }
-        [TestInitialize]
-        public void Setup()
-        {
-            if (!System.IO.Directory.Exists("REP1"))
-            {
-                System.IO.Directory.CreateDirectory("REP1");
-            }
-        }
 
         [TestMethod]
         public void TestDeplacementFichierTXT()
@@ -98,6 +100,61 @@ namespace CaculatriceTest
             //ASSERT
             Assert.IsTrue(System.IO.File.Exists("REP1/TXT/test.txt"));
             Assert.IsFalse(System.IO.File.Exists("REP1/test.txt"));
+        }
+        [TestMethod]
+        public void TestDeplacementFichierTXTDansunsousRépertoire()
+        {
+            // ARRANGE
+
+            if (System.IO.Directory.Exists("REP1/SREP"))
+            {
+                System.IO.Directory.Delete("REP1/SREP", true);
+            }
+            System.IO.Directory.CreateDirectory("REP1/SREP");
+            System.IO.File.CreateText("REP1/SREP/test.txt").Close();
+ 
+            //ACT
+            Repos MyRepos = new Repos();
+            MyRepos.Organize("REP1");
+
+            //ASSERT
+            Assert.IsTrue(System.IO.File.Exists("REP1/SREP/TXT/test.txt"));
+            Assert.IsFalse(System.IO.File.Exists("REP1/SREP/test.txt"));
+        }
+        [TestMethod]
+        public void TestDeplacement2Fichiers()
+        {
+            // ARRANGE
+
+            System.IO.File.CreateText("REP1/test.txt").Close();
+            System.IO.File.CreateText("REP1/test1.txt").Close();
+
+            //ACT
+            Repos MyRepos = new Repos();
+            MyRepos.Organize("REP1");
+
+            //ASSERT
+            Assert.IsTrue(System.IO.File.Exists("REP1/TXT/test.txt"));
+            Assert.IsTrue(System.IO.File.Exists("REP1/TXT/test1.txt"));
+        }
+
+        [TestMethod]
+        public void TestDeplacementExtensionsMajuscules()
+        {
+            // ARRANGE
+
+            System.IO.File.CreateText("REP1/test.TXT").Close();
+            System.IO.File.CreateText("REP1/test1.TxT").Close();
+            System.IO.File.CreateText("REP1/test2.tXt").Close();
+
+            //ACT
+            Repos MyRepos = new Repos();
+            MyRepos.Organize("REP1");
+
+            //ASSERT
+            Assert.IsTrue(System.IO.File.Exists("REP1/TXT/test.txt"));
+            Assert.IsTrue(System.IO.File.Exists("REP1/TXT/test1.TxT"));
+            Assert.IsTrue(System.IO.File.Exists("REP1/TXT/test2.tXt"));
         }
         //Traitement d'un extension .txt
         // Verification de la création du sous répertoire s'il n'existe pas 
