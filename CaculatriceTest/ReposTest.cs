@@ -43,7 +43,7 @@ namespace CaculatriceTest
             MyRepos.Organize("REP1");
             //Test
             //RETest
-
+            //ReTest    
 
             Assert.IsTrue(System.IO.Directory.Exists("REP1/TXT"));
         }
