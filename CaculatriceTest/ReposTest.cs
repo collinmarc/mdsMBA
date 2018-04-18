@@ -39,7 +39,6 @@ namespace CaculatriceTest
             }
 
             System.IO.File.CreateText("REP1/toto.txt").Close();
-            System.IO.File.n
             Repos MyRepos = new Repos();
             MyRepos.Organize("REP1");
 
